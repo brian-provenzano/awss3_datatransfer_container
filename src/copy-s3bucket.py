@@ -20,12 +20,15 @@ The access key for your AWS account.
 AWS_SECRET_ACCESS_KEY
 The secret key for your AWS account.
 AWS_DEFAULT_REGION
-The region to use - defaults to 'us-west-2 if not provided
+The region to use
 
-Assumes use of AWS credentials with S3FullAccess canned policy/permission ability for quick start
-(should only need: source bucket (s3:Get*, s3:List*); destination bucket (s3:Get*, s3:List*, s3:Put*))
+Assumes use of AWS credentials with S3FullAccess (canned policy/permission) for quick start
+However, if you wish to lock this down you should really only need: 
+- source bucket (s3:Get*, s3:List*)
+- destination bucket (s3:Get*, s3:List*, s3:Put*))
 
 TODOS - future enhancements
+----------------------
 - check if AWS env vars are set and return friendly excep if missing (wrap in auth() function..etc)
 - check / determine if buckets exists source and destination return friendly exception; don't let boto3 throw on this
 - improve total reporting on success/failure/attempt 
@@ -37,6 +40,7 @@ import boto3
 import argparse
 import time
 import os
+from datetime import datetime, timezone
 from botocore.exceptions import ClientError, BotoCoreError
 from enum import Enum
 
@@ -94,7 +98,7 @@ def main():
 
         timer.stop()
         print_message(message_type.INFO, "[{5} copied] - Copied [{0}] keys out of total of [{1}] keys to the destination "
-                      "bucket in [{2}]: [{3}] keys failed to meet threshold of [{4} bytes]".format(success, total, timer.print_summary(), failures, threshold_size, calculate_percentage(failures, total)))
+                      "bucket in [{2}]: [{3}] keys failed to meet threshold of [{4} bytes]".format(success, total, timer.print_summary(), failures, threshold_size, calculate_percentage(success, total)))
 
     except Exception as e:
         print_message(message_type.ERROR,
@@ -159,11 +163,13 @@ def print_message(message_type, friendly_message, detail_message="None"):
         color = ""
         coloroff = ""
     if detail_message == "None":
-        print("{3}[{0}] - {1}{4}".format(str(message_type.name),
-                                         friendly_message, detail_message, color, coloroff))
+        print("{2}[{0}]- [{4}] - {1}{3}".format(str(message_type.name),
+                                         friendly_message, color, coloroff,datetime.now(timezone.utc)
+))
     else:
-        print("{3}[{0}] - {1} - More Details [{2}]{4}".format(str(message_type.name),
-                                                              friendly_message, detail_message, color, coloroff))
+        print("{3}[{0}] - [{5}] - {1} - More Details [{2}]{4}".format(str(message_type.name),
+                                                              friendly_message, detail_message, color, coloroff,datetime.now(timezone.utc)
+))
 
 
 class message_type(Enum):
