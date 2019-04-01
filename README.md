@@ -130,3 +130,8 @@ Delete the images.  In the example above it would be as follows, using the image
 > docker image rm 0e2e7b32b440
 > docker image rm a93594ce93e7
 ```
+
+
+## License
+
+- [MIT License](https://docs.gluster.org/en/latest/)  (do whatever you want :))
