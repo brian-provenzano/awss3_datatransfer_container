@@ -5,10 +5,9 @@ build:
 	@docker build -t $(IMAGE):$(version) .
 #set to auto remove the container after execution
 run:
-	@docker run --rm -e AWS_ACCESS_KEY_ID=$(accesskey) -e AWS_SECRET_ACCESS_KEY=$(secretkey) -e AWS_DEFAULT_REGION=$(region) --name=$(NAME) -d brianprovenzano/s3-bucketcopy:$(version)
+	@docker run --rm -e AWS_ACCESS_KEY_ID=$(accesskey) -e AWS_SECRET_ACCESS_KEY=$(secretkey) -e AWS_DEFAULT_REGION=$(region) --name=$(NAME) brianprovenzano/s3-bucketcopy:$(version) $(sourcebucket) $(destinationbucket) $(threshold)
 run-envfile:
-	@docker run --rm --env-file envs/$(ENV) --name=$(NAME) -d brianprovenzano/s3-bucketcopy:$(version)
-run-logs: run logs
+	@docker run --rm --env-file envs/$(ENV) --name=$(NAME) brianprovenzano/s3-bucketcopy:$(version) $(sourcebucket) $(destinationbucket) $(threshold)
 start:
 	@docker container start $(NAME)
 stop:
