@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/local/bin/python3
 """
 copy-s3bucket.py
 -----------------------
@@ -73,14 +73,17 @@ def main():
         source_bucket = s3.Bucket(source_bucketname)
         destination_bucket = s3.Bucket(destination_bucketname)
 
+        print_message(message_type.DEBUG,"S3 Bucket Source set to [{0}]".format(source_bucketname))
+        print_message(message_type.INFO,"S3 Bucket Destination set to [{0}]".format(destination_bucketname))
+
         for src_obj in source_bucket.objects.all():
             #print(dir(obj))
             #print("------------")
-            print("object {0} - size: {1}".format(src_obj.key,src_obj.size))
-
             source = { 'Bucket': source_bucketname, 'Key': src_obj.key}
             dest_key = src_obj.key
             destination_bucket.copy(source,dest_key)
+
+            print_message(message_type.INFO,"S3 Object/Key [{0}] with size: [{1} bytes] copied to destination".format(src_obj.key,src_obj.size))
            
     except Exception as e:
         print_message(message_type.ERROR,"Error occurred [{0}] ".format(type(e).__name__),e)
