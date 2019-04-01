@@ -99,7 +99,7 @@ OR if using env file: `version` is the image:tag of the docker image created in 
 make run-envfile version=1.0 env=yourenvfilename sourcebucket=yoursourcebucketname destinationbucket=yourdestinationbucketnae threshold=500
 ```
 
-NOTE: Docker container is set to run attahed and auto remove itself on termination.  However, you can change this in the Makefile.
+NOTE: Docker container is set to run attached and auto remove itself on termination.  However, you can change this in the Makefile.
 
 
 
@@ -134,4 +134,4 @@ Delete the images.  In the example above it would be as follows, using the image
 
 ## License
 
-- [MIT License](https://docs.gluster.org/en/latest/)  (do whatever you want :))
+- [MIT License](https://opensource.org/licenses/MIT)  (do whatever you want :))
