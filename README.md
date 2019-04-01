@@ -14,10 +14,10 @@ This repo contains a containerized python script/application that when given the
 ### Clone this repo to your workstation / Create AWS Account
 Repository contents:
 - `envs` : contains sample environment file to pass credentials during `docker run` (this is an option; you can also just set env variables on the CLI.  Both methods are detailed below.)
-- `src/copy-s3bucket.py` - python script that does the heavy lifting of copying form s3 bucket to s3 bucket
+- `src/copy-s3bucket.py` - [python script](/src/copy-s3bucket.py) that does the heavy lifting of copying form s3 bucket to s3 bucket
 - `src/requirements.txt` - third party pre-reqs (only needed if testing outside the docker image.  Otherwise this is included in the image) 
-- `Dockerfile` : dockerfile for creating the docker image to run the python 
-- `Makefile` : simple makefile for easy docker build/run/cleanup etc
+- `Dockerfile` : [dockerfile](/Dockerfile) for creating the docker image to run the python 
+- `Makefile` : simple [makefile](/Makefile) for easy docker build/run/cleanup etc
 - `.git-secrets-init` : simple custom dotfile autogened when applying [git-secrets](https://github.com/awslabs/git-secrets) to the repo during repo initialization
 
 This assumes you already have an AWS account. If not, you can sign up for the [free tier](https://aws.amazon.com/free/?nc2=h_ql_pr) to work with this code.  For an easy start, you can create an IAM user with "AdministratorAccess" or "AmazonS3FullAccess".  Make note of your `AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY`.  You will also want to note the region the buckets you are working with are located.
@@ -27,7 +27,9 @@ NOTE: A more secure setup would be to only add the permission policy needed (lea
 
 
 ### Locate/Create Two S3 Buckets (Source, Destination)
-Determine an existing S3 bucket with data to use as the source bucket and create a new destination bucket.  Optionally, you may want to just create two new S3 buckets (source,destination) for use.  You can use the AWS CLI or the console to accomplish this.  Once this is completed, push some files/directories/data etc to the source bucket.
+Determine an existing S3 bucket with data to use as the source bucket and create a new destination bucket in the same region.  Optionally, you may want to just create two new S3 buckets (source,destination) in the same region for use.  You can use the AWS CLI or the console to accomplish this.  Once this is completed, push some files/directories/data etc to the source bucket.
+
+NOTE: Currently only supports (tested) bucket to bucket copy in the same region 
 
 
 
