@@ -26,14 +26,17 @@ Assumes use of AWS credentials with S3FullAccess canned policy/permission abilit
 (should only need: source bucket (s3:Get*, s3:List*); destination bucket (s3:Get*, s3:List*, s3:Put*))
 
 TODOS - future enhancements
-- check / determine if buckets exists source and destination; don't let boto3 throw on this
+- check if AWS env vars are set and return friendly excep if missing (wrap in auth() function..etc)
+- check / determine if buckets exists source and destination return friendly exception; don't let boto3 throw on this
 - improve total reporting on success/failure/attempt 
 (do not fail on exceptions that can be handled in boto3/http - continue if single copy fails)
+- log to a local logfile (if launched by container can be symlinked to stdout for 'docker logs' support)
 """
 
 import boto3
 import argparse
 import time
+import os
 from botocore.exceptions import ClientError, BotoCoreError
 from enum import Enum
 
@@ -56,21 +59,18 @@ def main():
     threshold_size = args.threshold
 
     try:
-        # TODO replace below with auth() - wrap up in some checks - function?? stubbed...
         s3 = boto3.resource("s3")
-
         source_bucket = s3.Bucket(source_bucketname)
         destination_bucket = s3.Bucket(destination_bucketname)
         total = sum(1 for x in source_bucket.objects.all())
 
         print_message(message_type.INFO,
                       "S3 Bucket Source set to [{0}]".format(source_bucketname))
-        print_message(message_type.INFO, "S3 Bucket Destination set to [{0}]".format(
-            destination_bucketname))
+        print_message(message_type.INFO, "S3 Bucket Destination set to [{0}]".format(destination_bucketname))
         print_message(
             message_type.INFO, "Key/Object Size Threshold set to [{0} bytes] (must be at least this size)".format(threshold_size))
         print_message(
-            message_type.INFO, "S3 Source Bucket Objects/Keys to attempt to copy [{0}]".format(total))
+            message_type.INFO, "S3 Source Bucket Objects/Keys to attempt to copy [{0}]\n -------".format(total))
 
         failures = 0
         success = 0
@@ -99,26 +99,6 @@ def main():
     except Exception as e:
         print_message(message_type.ERROR,
                       "Error occurred [{0}] ".format(type(e).__name__), e)
-
-
-def authenticate(aws_resource, region=None):
-    ''' 
-    Authenticate to AWS using boto3 session 
-    Returns: boto3 client
-    '''
-    try:
-        # do some checking of the env variables (if they exist)
-        session = boto3.Session()
-        client = session.client(aws_resource)
-        print_message(message_type.INFO, "Using AWS ENV variable credentials via region [ {0} ]".format(
-            session.region_name))
-        return client
-    except ClientError:
-        raise
-    except BotoCoreError:
-        # boto3 / botocore exceptions are slim; this is the catchall :(
-        raise
-
 
 # ------------------
 # - Helper functions/methods
