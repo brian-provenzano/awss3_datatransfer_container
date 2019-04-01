@@ -1,0 +1,11 @@
+# Put environment variables in this file, one per line in the form
+#
+# MYAPP_SOME_VARIABLE=foobar
+# MYAPP_DB_HOST=somehost.aws.rds.amazon.com
+#
+# DO NOT USE THIS FILE - CREATE ANOTHER FILE FOR ENV VARS INSTEAD!!
+#
+#AWS_REGION=us-west-2
+#AWS_DEFAULT_REGION=us-west-2
+#AWS_SECRET_ACCESS_KEY=yoursecret
+#AWS_ACCESS_KEY_ID=yourkey
